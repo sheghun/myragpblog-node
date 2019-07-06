@@ -15,9 +15,28 @@ class User extends Model {
 	public id!: number;
 	public firstName!: string;
 	public lastName!: string;
-	public phoneNumber!: string;
-	public password!: string;
+	public username!: string;
 	public email!: string;
+	public wallet!: number;
+	public password!: string;
+	public phoneNumber!: string;
+	public whatsappNumber!: string;
+	public bankAccountNumber!: string;
+	public bankAccountName!: string;
+	public bankId!: number;
+	public bankAccountType!: string;
+	public pv!: number;
+	public cumulativePv!: number;
+	public pvDate!: Date;
+	public transactions!: string;
+	public upFront!: number;
+	public image!: string;
+	public packageId!: number;
+	public referralId!: number;
+	public ragpReferralId!: string;
+	public paid!: string;
+	public aboutMe!: string;
+
 
 	// timestamps!
 	public readonly createdAt!: Date;
@@ -48,34 +67,94 @@ class User extends Model {
 // Init the user
 User.init({
 	id: {
-		type: DataTypes.INTEGER({ length: 11 }).UNSIGNED,
+		allowNull: false,
+		autoIncrement: true,
 		primaryKey: true,
-		autoIncrement: true
+		type: DataTypes.INTEGER.UNSIGNED
 	},
 	firstName: {
-		type: DataTypes.STRING(25),
-		allowNull: false
-	},
-	lastName: {
-		type: DataTypes.STRING(25),
-		allowNull: false
-	},
-	email: {
 		type: DataTypes.STRING(30),
 		allowNull: false
 	},
-	phoneNumber: {
-		type: DataTypes.STRING(13),
+	lastName: {
+		type: DataTypes.STRING(30),
+		allowNull: false
+	},
+	username: {
+		type: DataTypes.STRING(30),
 		allowNull: false,
 		unique: true
+	},
+	email: {
+		type: DataTypes.STRING(30),
+		allowNull: false,
+		unique: true
+	},
+	wallet: {
+		type: DataTypes.DECIMAL(10, 2).UNSIGNED,
+		allowNull: false,
+		defaultValue: 0
 	},
 	password: {
 		type: DataTypes.STRING(100),
 		allowNull: false
 	},
-	resetPasswordToken: {
+	phoneNumber: {
+		type: DataTypes.STRING(11)
+	},
+	whatsappNumber: {
+		type: DataTypes.STRING(11)
+	},
+	bankAccountNumber: {
+		type: DataTypes.STRING(16)
+	},
+	bankAccountName: {
+		type: DataTypes.STRING(30)
+	},
+	bankId: {
+		type: DataTypes.INTEGER({ length: 2 })
+	},
+	bankAccountType: {
+		type: DataTypes.STRING(10)
+	},
+	pv: {
+		type: DataTypes.MEDIUMINT({ length: 7 }).UNSIGNED,
+		allowNull: false,
+		defaultValue: 0
+	},
+	cumulativePv: {
+		type: DataTypes.MEDIUMINT({ length: 7 }).UNSIGNED,
+		allowNull: false,
+		defaultValue: 0
+	},
+	pvDate: {
+		type: DataTypes.DATE
+	},
+	transactions: {
+		type: DataTypes.TEXT("long")
+	},
+	upFront: {
+		type: DataTypes.TINYINT({ length: 2 }).UNSIGNED
+	},
+	image: {
 		type: DataTypes.STRING(100)
+	},
+	packageId: {
+		type: DataTypes.TINYINT({ length: 2 }).UNSIGNED
+	},
+	referralId: {
+		type: DataTypes.STRING(30)
+	},
+	ragpReferralId: {
+		type: DataTypes.STRING(30)
+	},
+	paid: {
+		type: DataTypes.DATE
+	},
+	aboutMe: {
+		type: DataTypes.STRING(160)
 	}
+
 
 },
 	{
