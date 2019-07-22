@@ -54,12 +54,13 @@ class User extends Model {
 		return user;
 	}
 	/**
+	 * Compare
+	 * For checking if the password is correct
 	 *
 	 * @param password The pass in password to compare
-	 * @param encrypted The hashed password in the database
 	 */
-	async compare(password: string, encrypted: string): Promise<boolean> {
-		return await bcrypt.compare(password, encrypted);
+	async comparePassword(password: string): Promise<boolean> {
+		return await bcrypt.compare(password, this.password);
 	}
 
 }
