@@ -47,8 +47,8 @@ module.exports = {
 			bankAccountName: {
 				type: Sequelize.STRING(30)
 			},
-			bankId: {
-				type: Sequelize.INTEGER(2)
+			bank: {
+				type: Sequelize.STRING(2)
 			},
 			bankAccountType: {
 				type: Sequelize.STRING(10)

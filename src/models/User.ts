@@ -23,7 +23,7 @@ class User extends Model {
 	public whatsappNumber!: string;
 	public bankAccountNumber!: string;
 	public bankAccountName!: string;
-	public bankId!: number;
+	public bank!: string;
 	public bankAccountType!: string;
 	public pv!: number;
 	public cumulativePv!: number;
@@ -112,8 +112,8 @@ User.init({
 	bankAccountName: {
 		type: DataTypes.STRING(30)
 	},
-	bankId: {
-		type: DataTypes.INTEGER({ length: 2 })
+	bank: {
+		type: DataTypes.STRING(30)
 	},
 	bankAccountType: {
 		type: DataTypes.STRING(10)
