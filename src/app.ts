@@ -6,6 +6,7 @@ import cors, { CorsOptions } from "cors";
 import "./util/secrets";
 import { sequelize } from "./util/secrets";
 import UserRoutes from "./routes/user";
+import OtherRoutes from "./routes/others";
 
 
 // Sync the sequelize
@@ -39,6 +40,8 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 // Use cors
 app.use(cors(corsOptions()));
+
+app.use("/", OtherRoutes(express.Router()));
 
 app.use("/user", UserRoutes(express.Router()));
 

@@ -48,9 +48,6 @@ export const create = [
 		// Check if the req contains errors
 		const errors = validationResult(req);
 
-		const user = await User.findOne({ where: { email: req.body.email } });
-		console.log(user);
-
 		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
@@ -115,6 +112,10 @@ export const login = [
 		/// @ts-ignore
 		const token = await signToken(payload, process.env.JWT_TOKEN as string, options);
 		res.cookie(process.env.USER_TOKEN_COOKIE as string, token);
+
+		if (r.user.whatsappNumber === null) {
+			return res.status(200).json({ notDone: true });
+		}
 		return res.send(200);
 	}
 
