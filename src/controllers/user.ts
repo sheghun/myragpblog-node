@@ -57,7 +57,7 @@ export const create = [
 			await User.create({ ...req.body });
 			return res.sendStatus(201);
 		} catch (error) {
-			return res.status(500).json({ errors: "Could not create user" });
+			return res.status(500).json({ errors: ["Could not create user"] });
 		}
 
 
@@ -119,4 +119,46 @@ export const login = [
 		return res.send(200);
 	}
 
+];
+
+export const update = [
+	check("firstName", "Must contain only strings").optional()
+		.escape().isLength({ min: 1 }),
+	check("lastName", "Can't be empty").optional().escape().isLength({ min: 1 }),
+	check("email", "E-mail is invalid").optional().escape().isLength({ min: 1 })
+		.custom(async (email, { req }) => {
+			// Check if the email exists
+			const user = await User.findOne({ where: { email } });
+			if (user !== null) {
+				return false;
+			}
+			return true;
+		})
+		.withMessage("E-mail already exists, can't use two emails"),
+	check("password", "Must contain minimum of 6 letters").optional().escape().isLength({ min: 1 }),
+	check("bankAccountName").optional().escape().isLength({ min: 1 }),
+	check("bankAccountNumber", "Minimum of 10 digits").optional().escape().isLength({ min: 10 }),
+	check("whatsappNumber").optional().escape().isLength({ min: 1 }),
+	check("bank").optional().escape().isLength({ min: 1 }),
+	check("phoneNumber", "Minimum of 11 digits").optional().escape().isLength({ min: 11 }),
+	check("ragpReferalId").optional().escape().isLength({ min: 1 }),
+
+	async (req: Request, res: Response) => {
+		const errors = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			return res.status(422).json(errors.array());
+		}
+
+		try {
+			// @ts-ignore
+			await User.update({ ...req.body } as User);
+			return res.sendStatus(200);
+		} catch (error) {
+			return res.status(500).send(error);
+		}
+
+
+		return res.send(req.body.password);
+	}
 ];
