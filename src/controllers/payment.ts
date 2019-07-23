@@ -19,8 +19,6 @@ export const payOnce = [
 		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
-		// Get the package
-		const paystack = Paystack("name of the boy");
 
 		const pack = req.body.pack as Package;
 		return res.status(200).json(pack);
