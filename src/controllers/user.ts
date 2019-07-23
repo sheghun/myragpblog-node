@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { check, validationResult } from "express-validator/check";
-import { JWTPayload } from "../types";
+import { IJWTPayload } from "../types";
 import JWT from "jsonwebtoken";
 import User from "../models/User";
 import { promisify } from "util";
@@ -97,7 +97,7 @@ export const login = [
 		}
 
 		// Set the payload
-		const payload: JWTPayload = {
+		const payload: IJWTPayload = {
 			username: r.user.username,
 			iat: Date.now()
 		};
@@ -145,6 +145,8 @@ export const update = [
 
 	async (req: Request, res: Response) => {
 		const errors = validationResult(req);
+		// From the decoded token;
+		const username = req.body.username;
 
 		if (!errors.isEmpty()) {
 			return res.status(422).json(errors.array());
@@ -152,13 +154,12 @@ export const update = [
 
 		try {
 			// @ts-ignore
-			await User.update({ ...req.body } as User);
+			const user = await User.findOne({ where: { username } as any as User }) as User;
+			await user.update({ ...req.body });
 			return res.sendStatus(200);
 		} catch (error) {
 			return res.status(500).send(error);
 		}
 
-
-		return res.send(req.body.password);
 	}
 ];
