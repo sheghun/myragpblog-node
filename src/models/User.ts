@@ -32,8 +32,8 @@ class User extends Model {
 	public upFront!: number;
 	public image!: string;
 	public packageId!: number;
-	public referralId!: number;
-	public ragpReferralId!: string;
+	public referalId!: number;
+	public ragpReferalId!: string;
 	public paid!: string;
 	public aboutMe!: string;
 
@@ -143,10 +143,10 @@ User.init({
 	packageId: {
 		type: DataTypes.TINYINT({ length: 2 }).UNSIGNED
 	},
-	referralId: {
+	referalId: {
 		type: DataTypes.STRING(30)
 	},
-	ragpReferralId: {
+	ragpReferalId: {
 		type: DataTypes.STRING(30)
 	},
 	paid: {

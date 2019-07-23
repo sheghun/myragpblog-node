@@ -78,10 +78,10 @@ module.exports = {
 			packageId: {
 				type: Sequelize.TINYINT(2).UNSIGNED
 			},
-			referralId: {
+			referalId: {
 				type: Sequelize.STRING(30)
 			},
-			ragpReferralId: {
+			ragpReferalId: {
 				type: Sequelize.STRING(30)
 			},
 			paid: {

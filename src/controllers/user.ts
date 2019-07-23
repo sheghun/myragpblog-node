@@ -6,16 +6,16 @@ import User from "../models/User";
 import { promisify } from "util";
 
 export const create = [
-	check("referralId", "Referral ID is required").exists().isLength({ min: 4 })
-		.custom(async (referralId, { req }) => {
-			const user = await User.findOne({ where: { referralId } as User as any });
+	check("referalId", "Referal ID is required").exists().isLength({ min: 4 })
+		.custom(async (referalId, { req }) => {
+			const user = await User.count({ where: { username: referalId } as User as any });
 			// If user does not exist fail
-			if (user === null) {
+			if (user === 0) {
 				return false;
 			}
 			return true;
 		})
-		.withMessage("Referral ID doest not exist"),
+		.withMessage("Referal ID doest not exist"),
 	check("phoneNumber", "Phone number is required and must be 11 digits").exists().isLength({ min: 11, max: 11 }),
 	check("firstName", "First name is required").exists().isLength({ min: 1 }),
 	check("lastName", "Last name is required").exists().isLength({ min: 1 }),
@@ -23,6 +23,7 @@ export const create = [
 		.custom(async (email, { req }) => {
 			// Check if the email exists
 			const user = await User.findOne({ where: { email } });
+			console.log("Fuck you");
 			if (user !== null) {
 				return false;
 			}
@@ -46,6 +47,9 @@ export const create = [
 	async (req: Request, res: Response) => {
 		// Check if the req contains errors
 		const errors = validationResult(req);
+
+		const user = await User.findOne({ where: { email: req.body.email } });
+		console.log(user);
 
 		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
@@ -98,7 +102,7 @@ export const login = [
 		// Set the payload
 		const payload: JWTPayload = {
 			username: r.user.username,
-			iat: Date.now(),
+			iat: Date.now()
 		};
 
 		const options: JWT.SignOptions = {
