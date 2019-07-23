@@ -7,6 +7,7 @@ import "./util/secrets";
 import { sequelize } from "./util/secrets";
 import UserRoutes from "./routes/user";
 import OtherRoutes from "./routes/others";
+import PaymentRoutes from "./routes/payment";
 
 
 // Sync the sequelize
@@ -44,5 +45,7 @@ app.use(cors(corsOptions()));
 app.use("/", OtherRoutes(express.Router()));
 
 app.use("/user", UserRoutes(express.Router()));
+
+app.use("/payment", PaymentRoutes(express.Router()));
 
 export default app;
