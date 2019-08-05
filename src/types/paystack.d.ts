@@ -1,1 +1,1 @@
-declare module "paystack";
+declare module "paystack"
