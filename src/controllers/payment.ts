@@ -21,9 +21,24 @@ export const payOnce = [
 		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
+
 		const pack = req.body.pack as Package;
 		const reference = Date.now();
 		const user = await User.findOne({ where: { username: req.body.username } as User as any }) as User;
+
+		const trans = await Paystack(process.env.PAYSTACK_SECRET_KEY).transaction.initialize({
+			amount: pack.amount * 100,
+			reference,
+			email: user.email
+		});
+
+		const authorizationUrl = trans.data && trans.data.authorization_url;
+		console.log(trans);
+
+		if (!authorizationUrl) {
+			return res.sendStatus(400);
+		}
+
 		try {
 			await Transaction.create<Transaction>({
 				amount: pack.amount,
@@ -35,12 +50,7 @@ export const payOnce = [
 			return res.status(500);
 		}
 
-		const { data } = await Paystack(process.env.PAYSTACK_SECRET_KEY).transaction.initialize({
-			amount: pack.amount * 100,
-			reference,
-			email: user.email
-		});
-		return res.status(200).json({ authorizationUrl: data.authorization_url });
+		return res.status(200).json({ authorizationUrl });
 	}
 ];
 
@@ -54,10 +64,47 @@ export const verifyPayment = [
 		if (!errors.isEmpty()) {
 			return res.sendStatus(400);
 		}
+		const reference = req.body.reference;
+		const username = req.body.username;
 
 		// Get the transaction
+		const transaction = await Transaction.findOne({ where: { reference } });
+		if (transaction === null) {
+			return res.sendStatus(404);
+		}
+
+		// Check if the transaction has success has already been recorded
+		if (transaction.successful) {
+			return res.sendStatus(202);
+		}
+
+		const trxn = await Paystack(process.env.PAYSTACK_SECRET_KEY).transaction.verify(reference);
+		console.log(trxn)
+		if (trxn.status === undefined && !(trxn.message)) {
+			return res.sendStatus(408);
+		}
+
+		if (trxn.status === false && trxn.message) {
+			return res.sendStatus(404);
+		}
+
+		if (trxn.data.status === "success") {
+			// Get the user
+			const user = await User.findOne({ where: { username } as User as any }) as User;
 
 
-		return res.sendStatus(401);
+			// Update the transaction fields
+			transaction.successful = new Date() as any;
+			transaction.detail = JSON.stringify(trxn);
+
+			// Update the user paid column
+			user.paid = transaction.successful;
+
+			transaction.save();
+			user.save();
+		}
+
+
+		return res.sendStatus(202);
 	}
 ];

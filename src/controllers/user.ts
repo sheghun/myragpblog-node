@@ -116,6 +116,10 @@ export const login = [
 		if (r.user.whatsappNumber === null) {
 			return res.status(200).json({ notDone: true });
 		}
+
+		if (r.user.paid === null) {
+			return res.status(200).json({ notPaid: true });
+		}
 		return res.send(200);
 	}
 
