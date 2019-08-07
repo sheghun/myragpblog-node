@@ -27,6 +27,7 @@ const UserRoutes = (router: Router): Router => {
 	});
 
 	router.put("/", UserController.update);
+	router.get("/dashboard", UserController.dashboard);
 
 	return router;
 };

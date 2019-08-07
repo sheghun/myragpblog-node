@@ -58,7 +58,7 @@ module.exports = {
 				allowNull: false,
 				defaultValue: 0
 			},
-			cumulativePv: {
+			cummulativePv: {
 				type: Sequelize.MEDIUMINT(7).UNSIGNED,
 				allowNull: false,
 				defaultValue: 0

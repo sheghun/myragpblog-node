@@ -26,7 +26,7 @@ class User extends Model {
 	public bank!: string;
 	public bankAccountType!: string;
 	public pv!: number;
-	public cumulativePv!: number;
+	public cummulativePv!: number;
 	public pvDate!: Date;
 	public transactions!: string;
 	public upFront!: number;
@@ -123,7 +123,7 @@ User.init({
 		allowNull: false,
 		defaultValue: 0
 	},
-	cumulativePv: {
+	cummulativePv: {
 		type: DataTypes.MEDIUMINT({ length: 7 }).UNSIGNED,
 		allowNull: false,
 		defaultValue: 0

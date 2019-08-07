@@ -83,6 +83,7 @@ export const login = [
 		.custom(async (password, { req }) => {
 			let r = req as any;
 			r = await (r.user as User).comparePassword(password);
+			console.log(r);
 			if (!r) {
 				return false;
 			}
@@ -92,6 +93,7 @@ export const login = [
 	async (req: Request, res: Response) => {
 		const errors = validationResult(req);
 		const r = req as Request & { user: User };
+		console.log(errors.array());
 		if (!errors.isEmpty()) {
 			return res.sendStatus(401);
 		}
@@ -167,3 +169,25 @@ export const update = [
 
 	}
 ];
+
+/**
+ * User dashboard details
+ */
+export const dashboard = async (req: Request, res: Response) => {
+	const username = req.body.username;
+
+	let details = await User.findOne({
+		where: { username } as User as any,
+		attributes: ["cummulativePv", "pv", "wallet", "transactions"]
+	}) as User;
+	const network = await User.count({ where: { referalId: username } as User as any }) as number;
+	details = details.toJSON();
+	const data = {
+		...details,
+		network,
+		notifications: [],
+		transactions: []
+	};
+	return res.status(200).json(data);
+
+}
