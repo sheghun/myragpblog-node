@@ -5,11 +5,12 @@
 	"main": "src/server.js",
 	"scripts": {
 		"test": "jest --forceExit --coverage --verbose",
-		"build": "npm run build-ts && npm run tslint && npm run copy-static-assets",
+		"build": "npm run build-ts && npm run tslint && npm run create-npm-lock-file && npm run copy-static-assets",
 		"watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
 		"watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
 		"watch-node": "NODE_ENV=development nodemon dist/entry.js",
 		"tslint": "tslint -c tslint.json -p tsconfig.json",
+		"create-npm-lock-file": "synp -f -s yarn.lock",
 		"watch-ts": "tsc -w",
 		"build-ts": "tsc",
 		"serve-debug": "NODE_ENV=development nodemon --inspect dist/entry.js",
