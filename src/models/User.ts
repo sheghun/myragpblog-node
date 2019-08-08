@@ -1,12 +1,6 @@
 import {
 	Model,
-	HasManyHasAssociationMixin, HasManyCountAssociationsMixin,
-	HasManyCreateAssociationMixin,
-	HasManyGetAssociationsMixin,
-	HasManyAddAssociationMixin,
-	Association,
-	DataTypes,
-	HasManySetAssociationsMixin
+	DataTypes
 } from "sequelize";
 import { sequelize } from "../util/secrets";
 import bcrypt from "bcrypt";

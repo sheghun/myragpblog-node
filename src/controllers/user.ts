@@ -4,7 +4,6 @@ import { IJWTPayload } from "../types";
 import JWT from "jsonwebtoken";
 import User from "../models/User";
 import { promisify } from "util";
-import Package from "../models/Package";
 import Transaction from "../models/Transaction";
 
 export const create = [
