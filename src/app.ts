@@ -27,6 +27,16 @@ app.use((() => {
 	);
 })());
 
+app.get("/", (req, res) => {
+	return res.json({
+		message: "You probably shouldn't be here, but...",
+		data: {
+			"service": "myragpblog-api",
+			"version": "1.0"
+		}
+	});
+});
+
 const corsOptions = (): CorsOptions => {
 	return {
 		credentials: true,
