@@ -1,7 +1,7 @@
 import { Router } from "express";
 import * as PaymentController from "../controllers/payment";
 import { promisify } from "util";
-import { IJWTPayload } from "src/types";
+import { IJWTPayload } from "../types";
 import JWT, { JsonWebTokenError } from "jsonwebtoken";
 
 const PaymentRoutes = (router: Router): Router => {
