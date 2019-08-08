@@ -5,3 +5,5 @@ const shell = require("shelljs");
 shell.cp(".env", "dist/.env");
 shell.cp("-R", "src/templates", "dist/");
 shell.cp("-R", "src/_data", "dist/");
+shell.cp("package.json", "dist/")
+shell.cp("yarn.lock", "dist/package-lock.json");
