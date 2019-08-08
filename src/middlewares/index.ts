@@ -60,7 +60,6 @@ export const distributePayment = async (transaction: Transaction, user: User) =>
 
 			// Get the next user from the database
 			user = await User.findOne({ where: { username: user.referalId } as User as any }) as User;
-			console.log(user);
 
 		}
 	}

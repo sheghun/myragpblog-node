@@ -34,7 +34,6 @@ export const payOnce = [
 		});
 
 		const authorizationUrl = trans.data && trans.data.authorization_url;
-		console.log(trans);
 
 		if (!authorizationUrl) {
 			return res.sendStatus(400);
