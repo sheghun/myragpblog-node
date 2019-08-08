@@ -4,6 +4,7 @@ import Package from "../models/Package";
 import Paystack from "paystack";
 import Transaction from "../models/Transaction";
 import User from "../models/User";
+import { distributePayment } from "../middlewares";
 
 export const payOnce = [
 	check("id").exists().isLength({ min: 1 }).toInt()
@@ -79,8 +80,8 @@ export const verifyPayment = [
 		}
 
 		const trxn = await Paystack(process.env.PAYSTACK_SECRET_KEY).transaction.verify(reference);
-		console.log(trxn)
-		if (trxn.status === undefined && !(trxn.message)) {
+
+		if (!(trxn.status)) {
 			return res.sendStatus(408);
 		}
 
@@ -102,6 +103,9 @@ export const verifyPayment = [
 
 			transaction.save();
 			user.save();
+
+			distributePayment(transaction, user);
+
 		}
 
 

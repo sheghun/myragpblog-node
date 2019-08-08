@@ -32,7 +32,7 @@ class User extends Model {
 	public upFront!: number;
 	public image!: string;
 	public packageId!: number;
-	public referalId!: number;
+	public referalId!: string;
 	public ragpReferalId!: string;
 	public paid!: string;
 	public aboutMe!: string;

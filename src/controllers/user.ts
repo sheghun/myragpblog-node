@@ -4,6 +4,7 @@ import { IJWTPayload } from "../types";
 import JWT from "jsonwebtoken";
 import User from "../models/User";
 import { promisify } from "util";
+import Package from "../models/Package";
 
 export const create = [
 	check("referalId", "Referal ID is required").exists().isLength({ min: 4 })
@@ -190,4 +191,4 @@ export const dashboard = async (req: Request, res: Response) => {
 	};
 	return res.status(200).json(data);
 
-}
+};
