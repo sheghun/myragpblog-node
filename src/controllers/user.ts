@@ -5,6 +5,7 @@ import JWT from "jsonwebtoken";
 import User from "../models/User";
 import { promisify } from "util";
 import Package from "../models/Package";
+import Transaction from "../models/Transaction";
 
 export const create = [
 	check("referalId", "Referal ID is required").exists().isLength({ min: 4 })
@@ -55,7 +56,7 @@ export const create = [
 
 		// save the user
 		try {
-			await User.create({ ...req.body });
+			await User.create({ ...req.body, packageId: 1 } as User);
 			return res.sendStatus(201);
 		} catch (error) {
 			return res.status(500).json({ errors: ["Could not create user"] });
@@ -180,14 +181,48 @@ export const dashboard = async (req: Request, res: Response) => {
 	let details = await User.findOne({
 		where: { username } as User as any,
 		attributes: ["cummulativePv", "pv", "wallet", "transactions"]
-	}) as User;
+	}) as any;
+
 	const network = await User.count({ where: { referalId: username } as User as any }) as number;
-	details = details.toJSON();
+	details = details.toJSON() as { cummulativePv: number; pv: number; wallet: number; transactions: string };
+
+	// Get the transactions
+	type transArray = { id: number; level: number };
+	const transactions = [];
+	let transArray = JSON.parse(details.transactions) as Array<transArray>;
+
+	for (let trans of transArray) {
+
+		let { amount, description, username } = await Transaction.findOne({
+			where: { id: trans.id },
+			attributes: ["amount", "description", "username"]
+		}) as Transaction;
+		let percentage = 0;
+		// Calculate the percentage
+		switch (true) {
+			case trans.level <= 5:
+				percentage = 5 / 100;
+				break;
+			case trans.level > 5 && trans.level <= 10:
+				percentage = 2 / 100;
+				break;
+			case trans.level > 10 && trans.level <= 15:
+				percentage = 1 / 100;
+				break;
+		}
+
+		const t = [amount * percentage, username, description ];
+
+		transactions.push(t);
+	}
+
+
+
 	const data = {
 		...details,
 		network,
 		notifications: [],
-		transactions: []
+		transactions
 	};
 	return res.status(200).json(data);
 
