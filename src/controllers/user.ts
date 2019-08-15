@@ -234,4 +234,4 @@ export const profile = async (req: Request, res: Response) => {
 	const user = await User.findOne({ where: { username } }) as User;
 
 	res.json(user);
-}
+};
