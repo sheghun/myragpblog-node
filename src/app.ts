@@ -17,7 +17,7 @@ sequelize.sync();
 const app = express();
 
 // middleware
-app.use(express.static("public"));
+app.use(express.static(__dirname + "/assets"));
 app.use((() => {
 	return (
 		process.env.NODE_ENV !== "production" ? errorHandler() :
@@ -40,7 +40,12 @@ app.get("/", (req, res) => {
 const corsOptions = (): CorsOptions => {
 	return {
 		credentials: true,
-		origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
+		origin: [
+			"http://localhost:3000",
+			"http://localhost:3003",
+			"http://127.0.0.1:3000",
+			"https://myragpblog.com"
+		],
 		optionsSuccessStatus: 200
 	};
 };

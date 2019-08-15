@@ -210,7 +210,7 @@ export const dashboard = async (req: Request, res: Response) => {
 				break;
 		}
 
-		const t = [amount * percentage, username, description ];
+		const t = [amount * percentage, username, description];
 
 		transactions.push(t);
 	}
@@ -226,3 +226,12 @@ export const dashboard = async (req: Request, res: Response) => {
 	return res.status(200).json(data);
 
 };
+
+export const profile = async (req: Request, res: Response) => {
+	// Get the username from the request object
+	// @ts-ignore
+	const username = req.username;
+	const user = await User.findOne({ where: { username } }) as User;
+
+	res.json(user);
+}

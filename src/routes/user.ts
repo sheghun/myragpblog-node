@@ -18,6 +18,9 @@ const UserRoutes = (router: Router): Router => {
 		try {
 			const d = await verify(req.cookies.__sheghuntk__, process.env.JWT_TOKEN as string) as IJWTPayload;
 			req.body.username = d.username;
+			// Append the request to the request object the body might lose it contents
+			// @ts-ignore
+			req.username = d.username;
 			// Call the next function
 			next();
 		} catch (error) {
@@ -28,6 +31,7 @@ const UserRoutes = (router: Router): Router => {
 
 	router.put("/", UserController.update);
 	router.get("/dashboard", UserController.dashboard);
+	router.get("/profile", UserController.profile);
 
 	return router;
 };
