@@ -8,6 +8,7 @@ import { sequelize } from "./util/secrets";
 import UserRoutes from "./routes/user";
 import OtherRoutes from "./routes/others";
 import PaymentRoutes from "./routes/payment";
+import BlogRoutes from "./routes/blog";
 
 
 // Sync the sequelize
@@ -27,7 +28,7 @@ app.use((() => {
 	);
 })());
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
 	return res.json({
 		message: "You probably shouldn't be here, but...",
 		data: {
@@ -44,7 +45,7 @@ const corsOptions = (): CorsOptions => {
 			"http://localhost:3000",
 			"http://localhost:3003",
 			"http://127.0.0.1:3000",
-			"https://myragpblog.com"
+			"https://www.myragpblog.com"
 		],
 		optionsSuccessStatus: 200
 	};
@@ -62,5 +63,7 @@ app.use("/", OtherRoutes(express.Router()));
 app.use("/user", UserRoutes(express.Router()));
 
 app.use("/payment", PaymentRoutes(express.Router()));
+
+app.use("/blog", BlogRoutes(express.Router()));
 
 export default app;
