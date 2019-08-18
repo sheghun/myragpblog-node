@@ -189,6 +189,7 @@ export const dashboard = async (req: Request, res: Response) => {
 	type transArray = { id: number; level: number };
 	const transactions = [];
 	let transArray = JSON.parse(details.transactions) as Array<transArray>;
+	transArray = transArray.slice(0, 50);
 
 	for (let trans of transArray) {
 
