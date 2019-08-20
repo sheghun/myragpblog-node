@@ -13,7 +13,7 @@ export const distributePayment = async (transaction: Transaction, user: User) =>
 	// Fetch all the package at once
 	const allPackage = await Package.findAll();
 	// We are paying to the 15th level
-	for (let level = 1; level <= 15; level++) {
+	for (let level = 1; level <= 10; level++) {
 		// Get the package
 		const pack = allPackage.find((p) => p.id === user.packageId) as Package;
 
@@ -22,15 +22,23 @@ export const distributePayment = async (transaction: Transaction, user: User) =>
 		if (pack.level >= level) {
 			// Calculate for percentage
 			switch (true) {
-				case level <= 5:
+				case level === 1:
+					percentage = 20 / 100;
+					break;
+				case level === 2:
+					percentage = 10 / 100;
+					break;
+				case level === 3:
 					percentage = 5 / 100;
 					break;
-				case level > 5 && level <= 10:
+				case level === 4:
+					percentage = 3 / 100;
+					break;
+				case level === 5:
 					percentage = 2 / 100;
 					break;
-				case level > 10 && level <= 15:
+				default:
 					percentage = 1 / 100;
-					break;
 			}
 			let commission = transaction.amount * percentage;
 			commission = Number(commission.toFixed(2));

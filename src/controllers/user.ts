@@ -204,16 +204,25 @@ export const dashboard = async (req: Request, res: Response) => {
 		}) as Transaction;
 		let percentage = 0;
 		// Calculate the percentage
+		// Calculate for percentage
 		switch (true) {
-			case trans.level <= 5:
+			case trans.level === 1:
+				percentage = 20 / 100;
+				break;
+			case trans.level === 2:
+				percentage = 10 / 100;
+				break;
+			case trans.level === 3:
 				percentage = 5 / 100;
 				break;
-			case trans.level > 5 && trans.level <= 10:
+			case trans.level === 4:
+				percentage = 3 / 100;
+				break;
+			case trans.level === 5:
 				percentage = 2 / 100;
 				break;
-			case trans.level > 10 && trans.level <= 15:
+			default:
 				percentage = 1 / 100;
-				break;
 		}
 
 		const t = [amount * percentage, username, description];
