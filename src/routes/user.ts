@@ -8,6 +8,7 @@ const UserRoutes = (router: Router): Router => {
 
 	router.post("/", UserController.create);
 	router.post("/login", UserController.login);
+	router.get("/logout", UserController.logout);
 
 	router.use(async (req, res, next) => {
 		if (!req.cookies[process.env.USER_TOKEN_COOKIE as string]) {
@@ -32,6 +33,7 @@ const UserRoutes = (router: Router): Router => {
 	router.put("/", UserController.update);
 	router.get("/dashboard", UserController.dashboard);
 	router.get("/profile", UserController.profile);
+
 
 	return router;
 };

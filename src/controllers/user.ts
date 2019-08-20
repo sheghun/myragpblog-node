@@ -84,7 +84,6 @@ export const login = [
 		.custom(async (password, { req }) => {
 			let r = req as any;
 			r = await (r.user as User).comparePassword(password);
-			console.log(r);
 			if (!r) {
 				return false;
 			}
@@ -94,7 +93,6 @@ export const login = [
 	async (req: Request, res: Response) => {
 		const errors = validationResult(req);
 		const r = req as Request & { user: User };
-		console.log(errors.array());
 		if (!errors.isEmpty()) {
 			return res.sendStatus(401);
 		}
@@ -111,10 +109,17 @@ export const login = [
 
 		// Generate the token and add it as a cookie
 		const signToken = promisify(JWT.sign);
-
 		/// @ts-ignore
 		const token = await signToken(payload, process.env.JWT_TOKEN as string, options);
-		res.cookie(process.env.USER_TOKEN_COOKIE as string, token);
+		res.cookie(
+			process.env.USER_TOKEN_COOKIE as string,
+			token,
+			{
+				// expires: new Date(Date.now() + 3600),
+				httpOnly: true,
+				secure: process.env.NODE_ENV === "production" ? true : false
+			}
+		);
 
 		if (r.user.whatsappNumber === null) {
 			return res.status(200).json({ notDone: true });
@@ -123,7 +128,7 @@ export const login = [
 		if (r.user.paid === null) {
 			return res.status(200).json({ notPaid: true });
 		}
-		return res.send(200);
+		return res.sendStatus(200);
 	}
 
 ];
@@ -235,4 +240,9 @@ export const profile = async (req: Request, res: Response) => {
 	const user = await User.findOne({ where: { username } }) as User;
 
 	res.json(user);
+};
+
+export const logout = async (req: Request, res: Response) => {
+	// Clear the cookie
+	res.clearCookie(process.env.USER_TOKEN_COOKIE).sendStatus(200);
 };

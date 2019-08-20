@@ -19,14 +19,7 @@ const app = express();
 
 // middleware
 app.use(express.static(__dirname + "/assets"));
-app.use((() => {
-	return (
-		process.env.NODE_ENV !== "production" ? errorHandler() :
-			(req: Request, res: Response, next: NextFunction) => {
-				next();
-			}
-	);
-})());
+
 
 app.get("/", (_, res) => {
 	return res.json({
@@ -65,5 +58,7 @@ app.use("/user", UserRoutes(express.Router()));
 app.use("/payment", PaymentRoutes(express.Router()));
 
 app.use("/blog", BlogRoutes(express.Router()));
+
+app.use(errorHandler());
 
 export default app;
