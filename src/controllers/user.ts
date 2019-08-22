@@ -1,4 +1,4 @@
-import { Request, Errback, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator/check";
 import { IJWTPayload } from "../types";
 import JWT from "jsonwebtoken";
