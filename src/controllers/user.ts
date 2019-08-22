@@ -1,10 +1,13 @@
-import { Request, Response } from "express";
+import { Request, Errback, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator/check";
 import { IJWTPayload } from "../types";
 import JWT from "jsonwebtoken";
 import User from "../models/User";
 import { promisify } from "util";
 import Transaction from "../models/Transaction";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 
 export const create = [
 	check("referalId", "Referal ID is required").exists().isLength({ min: 4 })
@@ -242,16 +245,75 @@ export const dashboard = async (req: Request, res: Response) => {
 
 };
 
+/**
+ * For getting the users info
+ * @param req
+ * @param res
+ */
 export const profile = async (req: Request, res: Response) => {
 	// Get the username from the request object
 	// @ts-ignore
 	const username = req.username;
 	const user = await User.findOne({ where: { username } }) as User;
-
-	res.json(user);
+	const data = user.toJSON();
+	data.image = data.image ? data.image : "images/default.png";
+	res.json(data);
 };
 
 export const logout = async (req: Request, res: Response) => {
 	// Clear the cookie
 	res.clearCookie(process.env.USER_TOKEN_COOKIE).sendStatus(200);
+};
+
+/**
+ * To save the user image
+ */
+export const updateProfileImage = () => {
+	const storage = multer.diskStorage({
+		destination: (req, file, cb) => {
+			// Get the path
+			const filePath = path.join(__dirname, "/../assets/images/");
+			cb(null, filePath);
+		},
+		filename: async (req, file, cb) => {
+			console.log(file);
+			// @ts-ignore
+			const username = req.username;
+			const user = await User.findOne({ where: { username } });
+
+			const filename = `${user.username}-${file.fieldname}-${Date.now()}.png`;
+			cb(null, filename);
+		}
+	});
+
+	const upload = multer({ storage });
+	return [
+		upload.fields([{ name: "image", maxCount: 1 }]),
+		async (req: Request, res: Response, next: NextFunction) => {
+			const r = req as Request & {
+				files: {
+					image: Array<Express.Multer.File>;
+				}
+			};
+			// @ts-ignore
+			const username = req.username;
+			const user = await User.findOne({ where: { username } });
+			const image = r.files.image[0];
+
+			if (user.image !== null) {
+				const pathToOldImage = path.join(__dirname, `/../assets/${user.image}`);
+				fs.unlink(pathToOldImage, (err) => {
+					if (err) {
+						next(err);
+					}
+				});
+			}
+
+
+			user.image = `images/${image.filename}`;
+			user.save();
+
+			return res.status(202).send(`images/${image.filename}`);
+		}
+	];
 };

@@ -33,6 +33,7 @@ const UserRoutes = (router: Router): Router => {
 	router.put("/", UserController.update);
 	router.get("/dashboard", UserController.dashboard);
 	router.get("/profile", UserController.profile);
+	router.post("/update-image", UserController.updateProfileImage());
 
 
 	return router;
