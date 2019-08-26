@@ -187,11 +187,17 @@ export const dashboard = async (req: Request, res: Response) => {
 
 	let details = await User.findOne({
 		where: { username } as User as any,
-		attributes: ["cummulativePv", "pv", "wallet", "transactions"]
+		attributes: ["cummulativePv", "pv", "wallet", "transactions", "username"]
 	}) as any;
 
 	const network = await User.count({ where: { referalId: username } as User as any }) as number;
-	details = details.toJSON() as { cummulativePv: number; pv: number; wallet: number; transactions: string };
+	details = details.toJSON() as {
+		cummulativePv: number;
+		pv: number;
+		transactions: string
+		username: string;
+		wallet: number;
+	};
 
 	// Get the transactions
 	type transArray = { id: number; level: number };
@@ -233,6 +239,7 @@ export const dashboard = async (req: Request, res: Response) => {
 		transactions.push(t);
 	}
 
+	console.log(details);
 
 
 	const data = {
