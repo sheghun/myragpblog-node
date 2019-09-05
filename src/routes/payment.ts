@@ -16,8 +16,9 @@ const PaymentRoutes = (router: Router): Router => {
 		// Try decoding the jwt
 		const verify = promisify(JWT.verify);
 		try {
-			const d = await verify(req.cookies.__sheghuntk__, process.env.JWT_TOKEN as string) as IJWTPayload;
+			const d = await verify(req.cookies[process.env.USER_TOKEN_COOKIE], process.env.JWT_TOKEN as string) as IJWTPayload;
 			req.body.username = d.username;
+			console.log(d.username)
 			// Call the next function
 			next();
 		} catch (error) {
