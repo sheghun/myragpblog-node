@@ -1,6 +1,7 @@
 import { Router } from "express";
 import fs from "fs";
 import path from "path";
+import Visitor from "../models/Visitor"
 import { promisify } from "util";
 
 const OtherRoutes = (router: Router) => {

@@ -1,5 +1,4 @@
-
-export interface IJWTPayload {
-	iat: number;
-	username: string;
+declare interface JwtPayloadType {
+  iat?: number;
+  username: string;
 }

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/User";
+import Visitor from "../models/Visitor";
 
 export const getUser = async (req: Request, res: Response) => {
 	// Get the username
@@ -25,3 +26,16 @@ export const getUser = async (req: Request, res: Response) => {
 
 	res.json(payload);
 };
+
+export const subscribe = async(req: Request, res: Response) => {
+	const email = req.body.email;
+	const username = req.body.username;
+	// Check if the user already exists
+	const visitor = await Visitor.findOne({where : {email}});
+	if (visitor !== null) {
+		return res.sendStatus(200);
+	}
+	// Create the visitor
+	await Visitor.create({email, username});
+	return  res.sendStatus(200);
+}
